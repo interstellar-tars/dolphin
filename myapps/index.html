@@ -2,104 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AppBoard Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppBoard Login</title>
   <style>
     body {
+      background: #f3f4f6;
       font-family: 'Segoe UI', sans-serif;
-      background: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
     }
 
-    .header {
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 1rem;
       background: #2563eb;
       color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .logout-btn {
-      background: white;
-      color: #2563eb;
       border: none;
-      padding: 0.5rem 1rem;
       border-radius: 8px;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
     }
 
-    .logout-btn:hover {
-      background: #e5e7eb;
+    button:hover {
+      background: #1d4ed8;
     }
 
-    .content {
-      max-width: 600px;
-      margin: 2rem auto;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .app-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .app-list li {
-      padding: 0.75rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .app-list li:last-child {
-      border-bottom: none;
+    .error {
+      color: #dc2626;
+      font-size: 0.9rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Welcome to AppBoard</h1>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-
-  <div class="content">
-    <p><strong>User:</strong> <span id="user-email"></span></p>
-    <h3>Your Applications</h3>
-    <ul id="apps" class="app-list"></ul>
+  <div class="login-container">
+    <h2>Login to AppBoard</h2>
+    <form id="login-form">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Sign In</button>
+      <p class="error" id="error-msg"></p>
+    </form>
   </div>
 
   <script>
-    fetch("https://cool-sound-c620.cubiodojo.workers.dev/session", {
-      credentials: "include"
-    }).then(async (res) => {
-      if (!res.ok) {
-        window.location.href = "/myapps/";
-        return;
-      }
-      const data = await res.json();
-      document.getElementById("user-email").textContent = data.email;
-      const apps = document.getElementById("apps");
-      data.apps.forEach(app => {
-        const li = document.createElement("li");
-        li.textContent = app;
-        apps.appendChild(li);
-      });
-    });
-
-    function logout() {
-      fetch("https://cool-sound-c620.cubiodojo.workers.dev/logout", {
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const response = await fetch("https://cool-sound-c620.cubiodojo.workers.dev/login", {
+        method: "POST",
+        body: form,
         credentials: "include"
-      }).then(() => {
-        window.location.href = "/myapps/";
       });
-    }
+
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        document.getElementById("error-msg").textContent = "Invalid credentials.";
+      }
+    });
   </script>
 </body>
 </html>

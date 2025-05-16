@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AppBoard Dashboard</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    .app { background: #eee; padding: 1rem; margin: 0.5rem 0; border-radius: 6px; }
+    #apps { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Dashboard</h1>
+  <p id="status">Checking session...</p>
+  <div id="apps"></div>
+  <a href="https://cool-sound-c620.cubiodojo.workers.dev/logout">Logout</a>
+
+  <script>
+    fetch('https://cool-sound-c620.cubiodojo.workers.dev/session', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) throw new Error("Not logged in");
+        return res.json();
+      })
+      .then(data => {
+        document.getElementById('status').textContent = `Welcome, ${data.email}`;
+        const appList = data.apps.map(app => `<div class="app">${app}</div>`).join('');
+        document.getElementById('apps').innerHTML = appList;
+      })
+      .catch(() => {
+        window.location.href = "index.html"; // redirect to login
+      });
+  </script>
+
+</body>
+</html>

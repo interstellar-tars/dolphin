@@ -1,36 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AppBoard Dashboard</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    .app { background: #eee; padding: 1rem; margin: 0.5rem 0; border-radius: 6px; }
-    #apps { margin-top: 1rem; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      margin: 0;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .logout-btn {
+      background: white;
+      color: #2563eb;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .app-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .app-list li {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .app-list li:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body>
+  <div class="header">
+    <h1>Welcome to AppBoard</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 
-  <h1>Dashboard</h1>
-  <p id="status">Checking session...</p>
-  <div id="apps"></div>
-  <a href="https://cool-sound-c620.cubiodojo.workers.dev/logout">Logout</a>
+  <div class="content">
+    <p><strong>User:</strong> <span id="user-email"></span></p>
+    <h3>Your Applications</h3>
+    <ul id="apps" class="app-list"></ul>
+  </div>
 
   <script>
-    fetch('https://cool-sound-c620.cubiodojo.workers.dev/session', { credentials: 'include' })
-      .then(res => {
-        if (!res.ok) throw new Error("Not logged in");
-        return res.json();
-      })
-      .then(data => {
-        document.getElementById('status').textContent = `Welcome, ${data.email}`;
-        const appList = data.apps.map(app => `<div class="app">${app}</div>`).join('');
-        document.getElementById('apps').innerHTML = appList;
-      })
-      .catch(() => {
-        window.location.href = "index.html"; // redirect to login
+    fetch("https://cool-sound-c620.cubiodojo.workers.dev/session", {
+      credentials: "include"
+    }).then(async (res) => {
+      if (!res.ok) {
+        window.location.href = "/myapps/";
+        return;
+      }
+      const data = await res.json();
+      document.getElementById("user-email").textContent = data.email;
+      const apps = document.getElementById("apps");
+      data.apps.forEach(app => {
+        const li = document.createElement("li");
+        li.textContent = app;
+        apps.appendChild(li);
       });
-  </script>
+    });
 
+    function logout() {
+      fetch("https://cool-sound-c620.cubiodojo.workers.dev/logout", {
+        credentials: "include"
+      }).then(() => {
+        window.location.href = "/myapps/";
+      });
+    }
+  </script>
 </body>
 </html>

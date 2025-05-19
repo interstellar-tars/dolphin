@@ -1,43 +1,90 @@
-<html lang="en"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance - Dolphin</title>
-    <link rel="Icon" href="/DolphinLogoTransparent.png">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-        }
-        img{
-            height: 5%;
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dolphin Networks</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .hero {
+      padding: 5rem 1rem;
+      background: linear-gradient(to right, #007bff, #00c6ff);
+      color: white;
+      text-align: center;
+    }
+    .footer {
+      background-color: #343a40;
+      color: white;
+      padding: 1rem 0;
+    }
+    .logo {
+      height: 50px;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-        <h1>We'll Be Back Soon!</h1>
-        <h2>Our site is currently down for maintenance. Please check back later.</h2>
-        <p>©2025 Dolphin Networks. Dolphin Networks is a registered trademark of PhantomLabs LLC.</p>
-        <img src="/DolphinLogoTransparent.png">
+      <a class="navbar-brand" href="#">
+        <img src="/DolphinLogoTransparent.png" alt="Dolphin Logo" class="logo me-2">
+        Dolphin
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Devices</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="display-4">Experience the Future with Dolphin OS</h1>
+      <p class="lead">Fast. Private. Beautifully Designed.</p>
+      <a href="#" class="btn btn-light btn-lg mt-3">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container py-5">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <h3>Fast</h3>
+        <p>Optimized for performance and minimal latency, even on older devices.</p>
+      </div>
+      <div class="col-md-4">
+        <h3>Private</h3>
+        <p>No tracking, no ads, and fully open-source at its core.</p>
+      </div>
+      <div class="col-md-4">
+        <h3>Custom</h3>
+        <p>Built for complete personalization on your Dolphin device.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer text-center">
+    <div class="container">
+      <small>©2025 Dolphin Networks. Dolphin Networks is a registered trademark of PhantomLabs LLC.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
 
 
 

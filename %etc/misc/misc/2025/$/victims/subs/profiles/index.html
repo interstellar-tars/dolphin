@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Manager</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4">Employee Profile Manager</h1>
+    <form id="employeeForm" class="row g-3">
+      <div class="col-md-3">
+        <label for="firstName" class="form-label">First Name *</label>
+        <input type="text" class="form-control" id="firstName" required>
+      </div>
+      <div class="col-md-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName">
+      </div>
+      <div class="col-md-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="tel" class="form-control" id="phone">
+      </div>
+      <div class="col-md-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email">
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Create Profile</button>
+      </div>
+    </form>
+
+    <hr class="my-4"/>
+
+    <div id="profileContainer" class="row g-4">
+      <!-- Profiles will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://your-worker.workers.dev"; // Change this
+
+    const form = document.getElementById("employeeForm");
+    const container = document.getElementById("profileContainer");
+
+    async function loadProfiles() {
+      const res = await fetch(`${API_BASE}/employees`);
+      const data = await res.json();
+      renderProfiles(data);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const employee = {
+        firstName: document.getElementById("firstName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        notes: ""
+      };
+
+      if (!employee.firstName) return;
+
+      await fetch(`${API_BASE}/employees`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(employee)
+      });
+
+      form.reset();
+      loadProfiles();
+    });
+
+    async function deleteEmployee(id) {
+      await fetch(`${API_BASE}/employees/${id}`, { method: "DELETE" });
+      loadProfiles();
+    }
+
+    async function editEmployee(id, emp) {
+      document.getElementById("firstName").value = emp.firstName;
+      document.getElementById("lastName").value = emp.lastName;
+      document.getElementById("phone").value = emp.phone;
+      document.getElementById("email").value = emp.email;
+      await deleteEmployee(id);
+    }
+
+    async function updateNotes(id, value) {
+      await fetch(`${API_BASE}/employees/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: value })
+      });
+    }
+
+    function renderProfiles(profiles) {
+      container.innerHTML = "";
+      profiles.forEach(emp => {
+        const col = document.createElement("div");
+        col.className = "col-12";
+
+        col.innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4 border-end">
+                  <h5>${emp.firstName} ${emp.lastName}</h5>
+                  ${emp.phone ? `<p><strong>Phone:</strong> ${emp.phone}</p>` : ""}
+                  ${emp.email ? `<p><strong>Email:</strong> ${emp.email}</p>` : ""}
+                </div>
+                <div class="col-md-4 border-end">
+                  <button class="btn btn-sm btn-warning me-2" onclick='editEmployee(${emp.id}, ${JSON.stringify(emp)})'>Edit</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteEmployee(${emp.id})">Delete</button>
+                </div>
+                <div class="col-md-4">
+                  <textarea class="form-control" rows="3" placeholder="Notes..." oninput="updateNotes(${emp.id}, this.value)">${emp.notes}</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(col);
+      });
+    }
+
+    loadProfiles();
+  </script>
+</body>
+</html>
